@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!--Project was exported from assembly: C:\Users\Admin\Desktop\source\Moscad\Сервер связи системы телемеханики\Indusoft.TM.COM.Base.dll-->
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{FAA29042-40B6-4FA0-86D8-108723B14643}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AssemblyName>Indusoft.TM.COM.Base</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+    <ApplicationVersion>2.1.5.1</ApplicationVersion>
+    <FileAlignment>512</FileAlignment>
+    <RootNamespace>Indusoft.TM.COM.Base</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xml" />
+    <Reference Include="log4net">
+      <HintPath>lib\log4net.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ModemUpdateFlag.cs" />
+    <Compile Include="Direction.cs" />
+    <Compile Include="SendTo.cs" />
+    <Compile Include="ConfigType.cs" />
+    <Compile Include="ModemType.cs" />
+    <Compile Include="ATSWPBatchType.cs" />
+    <Compile Include="StringCommandType.cs" />
+    <Compile Include="NewModems.cs" />
+    <Compile Include="NewLogs.cs" />
+    <Compile Include="UpdatedModems.cs" />
+    <Compile Include="BatchData.cs" />
+    <Compile Include="TCPIPClient.cs" />
+    <Compile Include="Utils.cs" />
+    <Compile Include="IAnComBase.cs" />
+    <Compile Include="EventLogger.cs" />
+    <Compile Include="ITMCOMDataSet.cs" />
+    <Compile Include="Properties\Resources.cs" />
+    <Compile Include="AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

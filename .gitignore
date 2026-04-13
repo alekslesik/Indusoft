@@ -1,0 +1,15 @@
+*.stackdump
+*.log
+*.tmp
+
+# Go
+bin/
+dist/
+
+# C# build artifacts
+**/bin/
+**/obj/
+
+# IDE
+.DS_Store
+Thumbs.db

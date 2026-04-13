@@ -1,0 +1,23 @@
+---
+description: Phase 0 progress variable and auto-continue policy
+alwaysApply: true
+---
+
+# Phase 0 Only Mode
+
+- Active focus is only `Phase 0: Baseline and inventory` from `.cursor/rfc/rfc-go-migration-plan.md`.
+- Track a single variable named `progress` in `.cursor/rfc/phase0-status.md`.
+- `progress` is a percentage string (for example `73%`).
+
+# Progress Rules
+
+- After each meaningful Phase 0 update, recalculate and write the new `progress`.
+- Before stopping work, always read `.cursor/rfc/phase0-status.md`.
+- If `progress != 100%` and there are no critical blockers/questions, continue automatically.
+- If `progress == 100%`, stop and report completion.
+
+# Critical Blocker Definition
+
+- Missing required credentials/access.
+- Destructive decision requiring user approval.
+- Conflicting requirements that change project scope.

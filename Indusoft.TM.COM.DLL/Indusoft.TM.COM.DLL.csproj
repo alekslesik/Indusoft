@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!--Project was exported from assembly: C:\Users\Admin\Desktop\source\Moscad\Сервер связи системы телемеханики\Indusoft.TM.COM.DLL.dll-->
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{63AF3D73-5FDD-42FE-BDC4-74EAA38E36D9}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AssemblyName>Indusoft.TM.COM.DLL</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+    <ApplicationVersion>2.1.5.1</ApplicationVersion>
+    <FileAlignment>512</FileAlignment>
+    <RootNamespace>Indusoft.TM.COM.DLL</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Indusoft.TM.COM.Base">
+      <HintPath>lib\Indusoft.TM.COM.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ITMCOMDLL.cs" />
+    <Compile Include="LogStatus.cs" />
+    <Compile Include="RecordType.cs" />
+    <Compile Include="DBRecord.cs" />
+    <Compile Include="StatisticsRecord.cs" />
+    <Compile Include="DynamicRecord.cs" />
+    <Compile Include="StaticRecord.cs" />
+    <Compile Include="LogRecord.cs" />
+    <Compile Include="ModemRecord.cs" />
+    <Compile Include="NewModemRecord.cs" />
+    <Compile Include="Routing.cs" />
+    <Compile Include="DynamicTable.cs" />
+    <Compile Include="ModemInfo.cs" />
+    <Compile Include="WriteModemInfo.cs" />
+    <Compile Include="ReadModemObject.cs" />
+    <Compile Include="StaticTable.cs" />
+    <Compile Include="Redistribution.cs" />
+    <Compile Include="MonitorInfo.cs" />
+    <Compile Include="PortInfo.cs" />
+    <Compile Include="WriteObject.cs" />
+    <Compile Include="Utilities.cs" />
+    <Compile Include="ListenerArgs.cs" />
+    <Compile Include="ClientArgs.cs" />
+    <Compile Include="DataConvert.cs" />
+    <Compile Include="Properties\Resource.cs" />
+    <Compile Include="Properties\Settings.cs" />
+    <Compile Include="AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resource.resx" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

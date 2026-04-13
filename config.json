@@ -1,0 +1,34 @@
+{
+  "queueSize": 10000,
+  "cleanupTimeSeconds": 60,
+  "connectUnknown": false,
+  "handshakeTimeoutSeconds": 10,
+  "recvTimeoutMs": 15000,
+  "sendTimeoutMs": 15000,
+  "statisticsIntervalSeconds": 3600,
+  "statisticsRetentionHours": 2880,
+  "apiToken": "",
+  "apiRateLimitPerMinute": 300,
+  "dbConnString": "",
+  "dbAutoMigrate": false,
+  "dbUseStoredProcedures": false,
+  "listenBacklog": 128,
+  "listeners": [
+    {
+      "configurationId": 1,
+      "address": "0.0.0.0",
+      "port": 8010,
+      "serverID": "SERVER",
+      "modemType": "Legacy"
+    }
+  ],
+  "routing": [
+    {
+      "siteID": 1,
+      "modemID": "MODEM1"
+    }
+  ],
+  "comPorts": [],
+  "comRoutes": []
+}
+
