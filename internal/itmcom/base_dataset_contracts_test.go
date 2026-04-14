@@ -26,4 +26,3 @@ func TestBuildITMCOMDataSetCompat(t *testing.T) {
 		t.Fatalf("modem table missing")
 	}
 }
-

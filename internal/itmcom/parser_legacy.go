@@ -114,7 +114,7 @@ func parseLegacyFramesDetailed(
 		if flag4 {
 			raw := bytesCopy(receive[begin : begin+size1])
 			onFrame(BatchRecord{
-				Timestamp: time.Now(),
+				Timestamp:  time.Now(),
 				ModemID:    modemID,
 				ModemType:  modemType,
 				SiteIDFrom: siteFrom,
@@ -138,4 +138,3 @@ func parseLegacyFramesDetailed(
 	}
 	return nil, stats
 }
-

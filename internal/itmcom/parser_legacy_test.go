@@ -9,9 +9,9 @@ func TestParseLegacyFrames_MockFrame(t *testing.T) {
 	// IMPORTANT: In legacy header decoding, byte 0x10 is treated as an escape byte.
 	// So linkId must not equal 0x10.
 	receive := []byte{
-		0x01, // first (unused by our decoder)
+		0x01,       // first (unused by our decoder)
 		0x00, 0x01, // sideIdTo => after Convert => 1
-		0x11, // linkId
+		0x11,       // linkId
 		0x00, 0x02, // sideIdFrom => after Convert => 2
 		0x00, 0x01, // counter (unused)
 		0x00, // factor
@@ -36,4 +36,3 @@ func TestParseLegacyFrames_MockFrame(t *testing.T) {
 		t.Fatalf("expected nil remain, got %v", remain)
 	}
 }
-

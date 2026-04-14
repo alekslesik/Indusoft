@@ -39,4 +39,3 @@ func TestSyncRuntimeDataRouting(t *testing.T) {
 		t.Fatalf("expected 1 state, got %d", len(states))
 	}
 }
-

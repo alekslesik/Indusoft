@@ -64,4 +64,3 @@ func TestWithSecurity_RateLimit(t *testing.T) {
 		t.Fatalf("expected 429 on third call, got %d", rec3.Code)
 	}
 }
-

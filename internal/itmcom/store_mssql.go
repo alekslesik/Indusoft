@@ -12,7 +12,7 @@ import (
 )
 
 type mssqlStore struct {
-	db *sql.DB
+	db                  *sql.DB
 	useStoredProcedures bool
 }
 
@@ -531,4 +531,3 @@ END`,
 	}
 	return nil
 }
-

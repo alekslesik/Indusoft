@@ -66,4 +66,3 @@ func TestHTTPRuntimeCRUDAndCompatFlow(t *testing.T) {
 		t.Fatalf("GET /v1/compat/getdataset expected 200, got %d body=%s", rec.Code, rec.Body.String())
 	}
 }
-

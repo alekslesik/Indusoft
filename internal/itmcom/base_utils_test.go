@@ -41,4 +41,3 @@ func TestTCPIPClientCompatParsePoint(t *testing.T) {
 		t.Fatalf("site id mismatch: %d", c.SiteID)
 	}
 }
-

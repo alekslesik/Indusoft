@@ -41,14 +41,14 @@ type ListenerConfig struct {
 	// ConfigurationId matches the original Remoting configurationId concept.
 	ConfigurationId int `json:"configurationId"`
 
-	Address  string    `json:"address"`
+	Address   string    `json:"address"`
 	Port      int       `json:"port"`
 	ServerID  string    `json:"serverID"`
 	ModemType ModemType `json:"modemType"`
 }
 
 type RoutingConfig struct {
-	SiteID int    `json:"siteID"`
+	SiteID  int    `json:"siteID"`
 	ModemID string `json:"modemID"`
 }
 
@@ -81,7 +81,7 @@ type ServerConfig struct {
 	HandshakeTimeoutSeconds int `json:"handshakeTimeoutSeconds"`
 
 	Listeners []ListenerConfig `json:"listeners"`
-	Routing   []RoutingConfig `json:"routing"`
+	Routing   []RoutingConfig  `json:"routing"`
 	COMPorts  []COMPortConfig  `json:"comPorts"`
 	COMRoutes []COMRouteConfig `json:"comRoutes"`
 
@@ -95,33 +95,33 @@ type ServerConfig struct {
 	HTTPAddr string `json:"httpAddr"`
 	HTTPPort int    `json:"httpPort"`
 
-	DBConnString string `json:"dbConnString"`
-	DBAutoMigrate bool  `json:"dbAutoMigrate"`
-	DBUseStoredProcedures bool `json:"dbUseStoredProcedures"`
+	DBConnString          string `json:"dbConnString"`
+	DBAutoMigrate         bool   `json:"dbAutoMigrate"`
+	DBUseStoredProcedures bool   `json:"dbUseStoredProcedures"`
 
 	StatisticsIntervalSeconds int `json:"statisticsIntervalSeconds"`
 	StatisticsRetentionHours  int `json:"statisticsRetentionHours"`
 
-	APIToken            string `json:"apiToken"`
-	APIRateLimitPerMin  int    `json:"apiRateLimitPerMinute"`
+	APIToken           string `json:"apiToken"`
+	APIRateLimitPerMin int    `json:"apiRateLimitPerMinute"`
 }
 
 type configFile struct {
-	QueueSize    int              `json:"queueSize"`
-	CleanupTimeS int              `json:"cleanupTimeSeconds"`
-	ConnectUnknown bool          `json:"connectUnknown"`
-	HandshakeTimeoutSeconds int  `json:"handshakeTimeoutSeconds"`
-	RecvTimeoutMs int            `json:"recvTimeoutMs"`
-	SendTimeoutMs int            `json:"sendTimeoutMs"`
-	HTTPAddr string `json:"httpAddr"`
-	HTTPPort int    `json:"httpPort"`
-	DBConnString string `json:"dbConnString"`
-	DBAutoMigrate bool  `json:"dbAutoMigrate"`
-	DBUseStoredProcedures bool `json:"dbUseStoredProcedures"`
-	StatisticsIntervalSeconds int `json:"statisticsIntervalSeconds"`
-	StatisticsRetentionHours  int `json:"statisticsRetentionHours"`
-	APIToken            string `json:"apiToken"`
-	APIRateLimitPerMin  int    `json:"apiRateLimitPerMinute"`
+	QueueSize                 int    `json:"queueSize"`
+	CleanupTimeS              int    `json:"cleanupTimeSeconds"`
+	ConnectUnknown            bool   `json:"connectUnknown"`
+	HandshakeTimeoutSeconds   int    `json:"handshakeTimeoutSeconds"`
+	RecvTimeoutMs             int    `json:"recvTimeoutMs"`
+	SendTimeoutMs             int    `json:"sendTimeoutMs"`
+	HTTPAddr                  string `json:"httpAddr"`
+	HTTPPort                  int    `json:"httpPort"`
+	DBConnString              string `json:"dbConnString"`
+	DBAutoMigrate             bool   `json:"dbAutoMigrate"`
+	DBUseStoredProcedures     bool   `json:"dbUseStoredProcedures"`
+	StatisticsIntervalSeconds int    `json:"statisticsIntervalSeconds"`
+	StatisticsRetentionHours  int    `json:"statisticsRetentionHours"`
+	APIToken                  string `json:"apiToken"`
+	APIRateLimitPerMin        int    `json:"apiRateLimitPerMinute"`
 
 	ListenBacklog int `json:"listenBacklog"`
 
@@ -132,7 +132,7 @@ type configFile struct {
 		ServerID        string `json:"serverID"`
 		ModemType       string `json:"modemType"`
 	} `json:"listeners"`
-	Routing []RoutingConfig `json:"routing"`
+	Routing   []RoutingConfig  `json:"routing"`
 	COMPorts  []COMPortConfig  `json:"comPorts"`
 	COMRoutes []COMRouteConfig `json:"comRoutes"`
 }
@@ -151,21 +151,21 @@ func LoadConfig(path string) (*ServerConfig, error) {
 	cfg := &ServerConfig{
 		QueueSize:                 cf.QueueSize,
 		CleanupTimeS:              cf.CleanupTimeS,
-		ConnectUnknown:           cf.ConnectUnknown,
-		HandshakeTimeoutSeconds: cf.HandshakeTimeoutSeconds,
-		RecvTimeoutMs:            cf.RecvTimeoutMs,
-		SendTimeoutMs:            cf.SendTimeoutMs,
-		ListenBacklog:           cf.ListenBacklog,
-		Routing:                  cf.Routing,
-		COMPorts:                 cf.COMPorts,
-		COMRoutes:                cf.COMRoutes,
-		DBConnString:             strings.TrimSpace(cf.DBConnString),
-		DBAutoMigrate:            cf.DBAutoMigrate,
-		DBUseStoredProcedures:    cf.DBUseStoredProcedures,
+		ConnectUnknown:            cf.ConnectUnknown,
+		HandshakeTimeoutSeconds:   cf.HandshakeTimeoutSeconds,
+		RecvTimeoutMs:             cf.RecvTimeoutMs,
+		SendTimeoutMs:             cf.SendTimeoutMs,
+		ListenBacklog:             cf.ListenBacklog,
+		Routing:                   cf.Routing,
+		COMPorts:                  cf.COMPorts,
+		COMRoutes:                 cf.COMRoutes,
+		DBConnString:              strings.TrimSpace(cf.DBConnString),
+		DBAutoMigrate:             cf.DBAutoMigrate,
+		DBUseStoredProcedures:     cf.DBUseStoredProcedures,
 		StatisticsIntervalSeconds: cf.StatisticsIntervalSeconds,
 		StatisticsRetentionHours:  cf.StatisticsRetentionHours,
-		APIToken:                 strings.TrimSpace(cf.APIToken),
-		APIRateLimitPerMin:       cf.APIRateLimitPerMin,
+		APIToken:                  strings.TrimSpace(cf.APIToken),
+		APIRateLimitPerMin:        cf.APIRateLimitPerMin,
 	}
 
 	// Defaults.
@@ -224,4 +224,3 @@ func LoadConfig(path string) (*ServerConfig, error) {
 
 	return cfg, nil
 }
-

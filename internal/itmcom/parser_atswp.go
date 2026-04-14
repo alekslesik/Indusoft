@@ -187,12 +187,8 @@ func parseATSWPFramesDetailed(
 	return frames, newLegacyRemain, newATSWPRemain, stats
 }
 
-// clearByteStaffing matches ITMCOMDLL.ClearByteStaffing.
-func clearByteStaffing(oldBatch []byte) []byte {
-	out, _ := clearByteStaffingDetailed(oldBatch)
-	return out
-}
-
+// clearByteStaffingDetailed matches ITMCOMDLL.ClearByteStaffing and additionally
+// reports malformed escape tails.
 func clearByteStaffingDetailed(oldBatch []byte) ([]byte, bool) {
 	if len(oldBatch) == 0 {
 		return nil, true
@@ -232,4 +228,3 @@ func parseLegacyToBatches(
 
 // ensure time is used to keep linter happy; parseLegacyFrames uses time.Now.
 var _ = time.Now
-

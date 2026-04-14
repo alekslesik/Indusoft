@@ -39,4 +39,3 @@ func TestParseLegacyFramesDetailedPartialFrameRemain(t *testing.T) {
 		t.Fatalf("expected empty remain, got %d", len(remain2))
 	}
 }
-

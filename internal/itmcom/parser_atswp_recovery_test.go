@@ -50,4 +50,3 @@ func TestClearByteStaffingDetailedDanglingEscape(t *testing.T) {
 		t.Fatalf("expected dangling escape to be malformed")
 	}
 }
-

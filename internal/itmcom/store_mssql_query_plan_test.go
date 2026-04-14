@@ -29,4 +29,3 @@ func TestRuntimeQueryPlan(t *testing.T) {
 		}
 	}
 }
-

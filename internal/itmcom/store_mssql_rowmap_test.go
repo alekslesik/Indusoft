@@ -19,4 +19,3 @@ func TestAsStringAndAsInt(t *testing.T) {
 		t.Fatalf("asInt typeid mismatch: %d", got)
 	}
 }
-
