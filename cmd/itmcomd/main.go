@@ -34,13 +34,8 @@ func main() {
 		rd, err := dbStore.LoadRuntimeData(context.Background())
 		if err != nil {
 			log.Printf("db runtime load failed, using file config: %v", err)
-		} else if rd != nil {
-			if len(rd.Listeners) > 0 {
-				cfg.Listeners = rd.Listeners
-			}
-			if len(rd.Routing) > 0 {
-				cfg.Routing = rd.Routing
-			}
+		} else {
+			applyRuntimeOverrides(cfg, rd)
 		}
 	}
 
@@ -51,12 +46,6 @@ func main() {
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-	_ = srv.SyncRuntimeData(ctx, &itmcom.RuntimeData{
-		Listeners: cfg.Listeners,
-		Routing:   cfg.Routing,
-		COMPorts:  cfg.COMPorts,
-		COMRoutes: cfg.COMRoutes,
-	})
 
 	// Graceful shutdown.
 	sigCh := make(chan os.Signal, 1)
@@ -67,42 +56,8 @@ func main() {
 		cancel()
 	}()
 
-	for _, ln := range cfg.Listeners {
-		log.Printf("listening on %s:%d (modemType=%s)", ln.Address, ln.Port, ln.ModemType)
-		if err := srv.StartListener(ctx, ln); err != nil {
-			log.Fatalf("start listener: %v", err)
-		}
-	}
-
-	if store != nil {
-		go func() {
-			t := time.NewTicker(5 * time.Second)
-			defer t.Stop()
-			for {
-				select {
-				case <-ctx.Done():
-					return
-				case <-t.C:
-					rd, err := store.LoadRuntimeData(ctx)
-					if err != nil {
-						log.Printf("runtime reload failed: %v", err)
-						continue
-					}
-					if err := srv.SyncRuntimeData(ctx, rd); err != nil {
-						log.Printf("runtime sync failed: %v", err)
-					}
-				}
-			}
-		}()
-	}
-	srv.StartStatisticsWorker(ctx)
-	srv.StartConnectionWatchdog(ctx)
-
-	if cfg.HTTPPort > 0 {
-		log.Printf("starting http api on %s:%d", cfg.HTTPAddr, cfg.HTTPPort)
-		if err := srv.StartHTTP(ctx); err != nil {
-			log.Fatalf("start http api: %v", err)
-		}
+	if err := startServiceLifecycle(ctx, srv, cfg, store); err != nil {
+		log.Fatalf("start lifecycle: %v", err)
 	}
 
 	// Block until shutdown.
