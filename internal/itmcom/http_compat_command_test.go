@@ -71,5 +71,18 @@ func TestCompatCommandEndpoints(t *testing.T) {
 	if rec.Code != http.StatusConflict {
 		t.Fatalf("setusecommand foreign host expected 409, got %d body=%s", rec.Code, rec.Body.String())
 	}
-}
 
+	// case mismatch should be rejected by strict owner check.
+	rec = httptest.NewRecorder()
+	mux.ServeHTTP(rec, authReq(t, http.MethodGet, "/v1/compat/getusecommand?modemId=M1&machineName=host-a", "token123", nil))
+	if rec.Code != http.StatusConflict {
+		t.Fatalf("getusecommand case mismatch expected 409, got %d body=%s", rec.Code, rec.Body.String())
+	}
+
+	// missing modemId must return bad request.
+	rec = httptest.NewRecorder()
+	mux.ServeHTTP(rec, authReq(t, http.MethodGet, "/v1/compat/getcommanddata?machineName=HOST-A", "token123", nil))
+	if rec.Code != http.StatusBadRequest {
+		t.Fatalf("getcommanddata missing modemId expected 400, got %d body=%s", rec.Code, rec.Body.String())
+	}
+}
