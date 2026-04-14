@@ -1,9 +1,9 @@
-# Руководство по эксплуатации сервера связи (Go)
+# Сервер связи `itmcomd` (Go)
 
 ## 1. Назначение
 
 `itmcomd` — это сервер связи для телеметрии и команд управления.
-По схеме он соответствует роли **«ПО сервера связи»** и работает как шлюз между:
+По рабочей схеме он соответствует роли **«ПО сервера связи»** и работает как шлюз между:
 
 - контроллером (`Motorola ACE 3600`, TCP/RS-232),
 - сервером данных/интеграцией (`PI Moto Интерфейс`),
@@ -11,10 +11,10 @@
 
 Ключевые функции:
 
-- прием и разбор протоколов `Legacy` и `ATSWP`,
-- маршрутизация сообщений (TCP, очереди, COM),
-- выдача совместимого API (`/v1/compat/*`),
-- сохранение событий/данных в MSSQL (опционально),
+- прием и разбор протоколов `Legacy` и `ATSWP`;
+- маршрутизация сообщений (TCP, очереди, COM);
+- выдача совместимого API (`/v1/compat/*`);
+- сохранение событий/данных в MSSQL (опционально);
 - мониторинг состояния и метрик.
 
 ## 2. Компоненты и зоны ответственности
@@ -57,8 +57,8 @@
 - Доступ к MSSQL (если используется БД режим).
 - Доступ к COM-портам ОС (если используется RS-232).
 - Открытые сетевые порты для:
-  - входящих модемных TCP сессий,
-  - HTTP API сервиса,
+  - входящих модемных TCP сессий;
+  - HTTP API сервиса;
   - исходящего/входящего MSSQL.
 
 ## 5. Конфигурация
@@ -109,22 +109,22 @@ make build
 
 Основные группы endpoint'ов:
 
-- runtime управление:  
-  - `GET/PUT /v1/runtime`  
-  - `GET/POST/DELETE /v1/runtime/listeners`  
-  - `GET/POST/DELETE /v1/runtime/routing`  
-  - `GET/POST/DELETE /v1/runtime/comports`  
+- runtime управление:
+  - `GET/PUT /v1/runtime`
+  - `GET/POST/DELETE /v1/runtime/listeners`
+  - `GET/POST/DELETE /v1/runtime/routing`
+  - `GET/POST/DELETE /v1/runtime/comports`
   - `GET/POST/DELETE /v1/runtime/comroutes`
-- мониторинг:  
-  - `GET /v1/modems`  
+- мониторинг:
+  - `GET /v1/modems`
   - `GET /v1/metrics`
-- compat-операции:  
-  - `POST /v1/compat/connect`  
-  - `POST /v1/compat/disconnect`  
-  - `POST /v1/compat/break`  
-  - `POST /v1/compat/docommand`  
-  - `GET /v1/compat/getdataset`  
-  - `GET/POST /v1/compat/get|setuse*`  
+- compat-операции:
+  - `POST /v1/compat/connect`
+  - `POST /v1/compat/disconnect`
+  - `POST /v1/compat/break`
+  - `POST /v1/compat/docommand`
+  - `GET /v1/compat/getdataset`
+  - `GET/POST /v1/compat/get|setuse*`
   - `GET /v1/compat/get*data`
 
 Для compat API действует модель владения клиентом (`machineName`) для защиты от конфликтующих операторов.
