@@ -1,18 +1,18 @@
 ---
-description: Phase 5 progress variable and auto-continue policy
+description: Phase 6 progress variable and auto-continue policy
 alwaysApply: true
 ---
 
-# Phase 5 Only Mode
+# Phase 6 Only Mode
 
-- Active focus is only `Phase 5: Protocol hard parity` from `.cursor/rfc/rfc-go-migration-plan.md`.
-- Track a single variable named `progress` in `.cursor/rfc/phase5-status.md`.
+- Active focus is only `Phase 6: Final closure` from `.cursor/rfc/rfc-go-migration-plan.md`.
+- Track a single variable named `progress` in `.cursor/rfc/phase6-status.md`.
 - `progress` is a percentage string (for example `30%`).
 
 # Progress Rules
 
-- After each meaningful Phase 5 update, recalculate and write the new `progress`.
-- Before stopping work, always read `.cursor/rfc/phase5-status.md`.
+- After each meaningful Phase 6 update, recalculate and write the new `progress`.
+- Before stopping work, always read `.cursor/rfc/phase6-status.md`.
 - If `progress != 100%` and there are no critical blockers/questions, continue automatically.
 - If `progress == 100%`, stop and report completion.
 
