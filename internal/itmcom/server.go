@@ -15,7 +15,7 @@ import (
 )
 
 type Server struct {
-	cfg *ServerConfig
+	cfg   *ServerConfig
 	store Store
 
 	mu sync.RWMutex
@@ -25,41 +25,41 @@ type Server struct {
 	// Active connections, one per modemID.
 	conns map[string]*ModemConn
 
-	listeners []net.Listener
-	listenerByID map[int]net.Listener
+	listeners       []net.Listener
+	listenerByID    map[int]net.Listener
 	listenerCfgByID map[int]ListenerConfig
-	comManager *COMManager
-	comPorts []COMPortConfig
-	comRoutes []COMRouteConfig
-	startedAt time.Time
-	readErrors int64
-	writeErrors int64
-	parseErrors int64
-	droppedFrames int64
-	clientMachine string
+	comManager      *COMManager
+	comPorts        []COMPortConfig
+	comRoutes       []COMRouteConfig
+	startedAt       time.Time
+	readErrors      int64
+	writeErrors     int64
+	parseErrors     int64
+	droppedFrames   int64
+	clientMachine   string
 
 	shutdownOnce sync.Once
 }
 
 func NewServer(cfg *ServerConfig) *Server {
 	s := &Server{
-		cfg:            cfg,
-		store:          &noOpStore{},
-		routingByModem: make(map[string]*Routing),
-		conns:          make(map[string]*ModemConn),
-		listenerByID:   make(map[int]net.Listener),
+		cfg:             cfg,
+		store:           &noOpStore{},
+		routingByModem:  make(map[string]*Routing),
+		conns:           make(map[string]*ModemConn),
+		listenerByID:    make(map[int]net.Listener),
 		listenerCfgByID: make(map[int]ListenerConfig),
-		comManager:     NewCOMManager(),
-		startedAt:      time.Now(),
+		comManager:      NewCOMManager(),
+		startedAt:       time.Now(),
 	}
 	for _, rc := range cfg.Routing {
 		route := &Routing{
-			SiteID:  rc.SiteID,
-			ModemID: rc.ModemID,
+			SiteID:    rc.SiteID,
+			ModemID:   rc.ModemID,
 			MbConnect: false,
-			Monitor: NewMonitorQueue(cfg.QueueSize),
-			Command: NewMonitorQueue(cfg.QueueSize),
-			Config: NewMonitorQueue(cfg.QueueSize),
+			Monitor:   NewMonitorQueue(cfg.QueueSize),
+			Command:   NewMonitorQueue(cfg.QueueSize),
+			Config:    NewMonitorQueue(cfg.QueueSize),
 			CommState: NewMonitorQueue(cfg.QueueSize),
 		}
 		route.Command.SetInUse(false)
@@ -120,8 +120,8 @@ func (s *Server) StartListener(ctx context.Context, lnCfg ListenerConfig) error 
 				if ctx.Err() != nil {
 					return
 				}
-				// temporary error
-				if ne, ok := err.(net.Error); ok && ne.Temporary() {
+				// Backoff on timeout-like transient accept errors.
+				if ne, ok := err.(net.Error); ok && ne.Timeout() {
 					time.Sleep(100 * time.Millisecond)
 					continue
 				}
@@ -728,12 +728,12 @@ func (s *Server) ModemStates() []ModemState {
 	states := make([]ModemState, 0, len(s.routingByModem))
 	for modemID, route := range s.routingByModem {
 		st := ModemState{
-			ModemID:   modemID,
-			SiteID:    route.SiteID,
-			Connected: route.MbConnect,
-			QueueDepth: route.Monitor.Len(),
-			CommandQueueDepth: route.Command.Len(),
-			ConfigQueueDepth: route.Config.Len(),
+			ModemID:             modemID,
+			SiteID:              route.SiteID,
+			Connected:           route.MbConnect,
+			QueueDepth:          route.Monitor.Len(),
+			CommandQueueDepth:   route.Command.Len(),
+			ConfigQueueDepth:    route.Config.Len(),
 			CommStateQueueDepth: route.CommState.Len(),
 		}
 		if c := s.conns[modemID]; c != nil {
@@ -916,4 +916,3 @@ func (s *Server) StartStatisticsWorker(ctx context.Context) {
 		}
 	}()
 }
-

@@ -1,7 +1,6 @@
 package itmcom
 
 import (
-	"encoding/hex"
 	"fmt"
 	"strings"
 )
@@ -62,14 +61,6 @@ func bytesCopy(buf []byte) []byte {
 	return out
 }
 
-func encodeBytesHexNoSpaces(data []byte) string {
-	return hex.EncodeToString(data)
-}
-
-func isATSWPCommand(batchType byte) bool {
-	return batchType > 5
-}
-
 // wrapATSWPBatch mirrors ITMCOMDLL.CorrectBatchContent for outgoing writes.
 // batchType 0..5 are data channels, 196+ are command/config/control.
 func wrapATSWPBatch(oldBatch []byte, batchType byte) []byte {
@@ -106,4 +97,3 @@ func wrapATSWPBatch(oldBatch []byte, batchType byte) []byte {
 	}
 	return out
 }
-
