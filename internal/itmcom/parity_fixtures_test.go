@@ -67,4 +67,3 @@ func TestParityFixture_ATSWPCommandFrame(t *testing.T) {
 		t.Fatalf("unexpected command site markers: from=%d to=%d", got[0].SiteIDFrom, got[0].SiteIDTo)
 	}
 }
-

@@ -59,4 +59,3 @@ func TestLegacyParityInt(t *testing.T) {
 		}
 	}
 }
-

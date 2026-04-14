@@ -7,12 +7,12 @@ import (
 )
 
 type MonitorQueue struct {
-	mu     sync.Mutex
-	max    int
-	inUse  bool
-	head   int
-	size   int
-	buf    []BatchRecord
+	mu    sync.Mutex
+	max   int
+	inUse bool
+	head  int
+	size  int
+	buf   []BatchRecord
 }
 
 func NewMonitorQueue(max int) *MonitorQueue {
@@ -108,18 +108,18 @@ func (r BatchRecord) MarshalJSON() ([]byte, error) {
 	// Keep encoding simple/explicit (avoid serializing Raw byte slice by default).
 	// This method is optional; leaving it out would include Raw.
 	type view struct {
-		Timestamp time.Time `json:"timestamp"`
-		ModemID   string    `json:"modemID"`
-		ModemType string    `json:"modemType"`
-		SiteIDFrom int      `json:"siteIDFrom"`
-		SiteIDTo   int      `json:"siteIDTo"`
-		LinkID     byte     `json:"linkID"`
-		BatchHex   string   `json:"batchHex"`
+		Timestamp  time.Time `json:"timestamp"`
+		ModemID    string    `json:"modemID"`
+		ModemType  string    `json:"modemType"`
+		SiteIDFrom int       `json:"siteIDFrom"`
+		SiteIDTo   int       `json:"siteIDTo"`
+		LinkID     byte      `json:"linkID"`
+		BatchHex   string    `json:"batchHex"`
 	}
 	v := view{
-		Timestamp: r.Timestamp,
-		ModemID:   r.ModemID,
-		ModemType: r.ModemType.String(),
+		Timestamp:  r.Timestamp,
+		ModemID:    r.ModemID,
+		ModemType:  r.ModemType.String(),
 		SiteIDFrom: r.SiteIDFrom,
 		SiteIDTo:   r.SiteIDTo,
 		LinkID:     r.LinkID,
@@ -128,4 +128,3 @@ func (r BatchRecord) MarshalJSON() ([]byte, error) {
 	// encoding/json will handle it.
 	return json.Marshal(v)
 }
-

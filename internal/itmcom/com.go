@@ -12,10 +12,10 @@ import (
 )
 
 type comPort struct {
-	cfg    COMPortConfig
+	cfg       COMPortConfig
 	serialCfg *serial.Config
-	handle *serial.Port
-	mu     sync.Mutex
+	handle    *serial.Port
+	mu        sync.Mutex
 
 	remain []byte
 	closed bool
@@ -27,10 +27,10 @@ type COMManager struct {
 	ports  map[int]*comPort
 	routes []COMRouteConfig
 
-	openErrors int64
-	readErrors int64
+	openErrors  int64
+	readErrors  int64
 	writeErrors int64
-	reconnects int64
+	reconnects  int64
 }
 
 func NewCOMManager() *COMManager {
@@ -224,4 +224,3 @@ func sameCOMPortConfig(a, b COMPortConfig) bool {
 		a.StopBits == b.StopBits &&
 		strings.EqualFold(strings.TrimSpace(a.Parity), strings.TrimSpace(b.Parity))
 }
-

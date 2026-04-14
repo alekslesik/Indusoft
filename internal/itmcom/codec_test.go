@@ -23,4 +23,3 @@ func TestWrapATSWPBatch_Command(t *testing.T) {
 		t.Fatalf("bad command frame: %s", hex.EncodeToString(out))
 	}
 }
-

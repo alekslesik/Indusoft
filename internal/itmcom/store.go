@@ -64,4 +64,3 @@ func (s *noOpStore) PruneOldData(ctx context.Context, olderThan time.Time) error
 	_ = olderThan
 	return nil
 }
-

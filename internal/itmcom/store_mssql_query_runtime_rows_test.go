@@ -59,4 +59,3 @@ func TestQueryRuntimeRowsModernThenLegacyFallback(t *testing.T) {
 		t.Fatalf("fallback order expectation failed: %v", err)
 	}
 }
-

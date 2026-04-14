@@ -18,4 +18,3 @@ func TestConnectClientSemantics(t *testing.T) {
 		t.Fatalf("after disconnect new host should succeed")
 	}
 }
-

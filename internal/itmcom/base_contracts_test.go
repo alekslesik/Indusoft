@@ -41,4 +41,3 @@ func TestBatchDataCompatFromCommand(t *testing.T) {
 		t.Fatalf("answer command text mismatch: %q", ans.Direction)
 	}
 }
-

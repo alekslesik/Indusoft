@@ -13,4 +13,3 @@ func TestParseLegacyFramesDetailed_MalformedCount(t *testing.T) {
 		t.Fatalf("expected parsed frames 0, got %d", stats.ParsedFrames)
 	}
 }
-

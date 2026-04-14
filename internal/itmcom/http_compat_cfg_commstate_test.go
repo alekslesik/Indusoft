@@ -89,4 +89,3 @@ func TestCompatConfigAndCommStateEndpoints(t *testing.T) {
 		t.Fatalf("setuseconfig foreign host expected 409, got %d body=%s", rec.Code, rec.Body.String())
 	}
 }
-

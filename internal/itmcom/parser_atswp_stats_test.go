@@ -21,4 +21,3 @@ func TestParseATSWPFramesDetailed_MalformedLength(t *testing.T) {
 		t.Fatalf("expected parsed 0, got %d", stats.ParsedFrames)
 	}
 }
-

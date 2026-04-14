@@ -47,4 +47,3 @@ func TestATSWPQueueSeparationByLinkID(t *testing.T) {
 		t.Fatalf("commstate queue len = %d, want 1", got)
 	}
 }
-
