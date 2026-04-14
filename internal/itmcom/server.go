@@ -465,7 +465,7 @@ func (s *Server) IsClientAllowed(machineName string) bool {
 	if owner == "" {
 		return true
 	}
-	return strings.EqualFold(owner, name)
+	return owner == name
 }
 
 func (s *Server) Break(modemID string) bool {
@@ -721,6 +721,20 @@ func (s *Server) SendToModem(modemID string, payload []byte, wrapATSWP bool, bat
 	return s.EnqueueModemWrite(modemID, data)
 }
 
+// SendCompatCommand enforces legacy doCommand semantics: only ATSWP modem sessions are allowed.
+func (s *Server) SendCompatCommand(modemID string, payload []byte, batchType byte) error {
+	s.mu.RLock()
+	c := s.conns[modemID]
+	s.mu.RUnlock()
+	if c == nil {
+		return fmt.Errorf("modem %q not connected", modemID)
+	}
+	if c.ModemType != ModemTypeATSWP {
+		return fmt.Errorf("modem %q does not support compat command protocol", modemID)
+	}
+	return s.EnqueueModemWrite(modemID, wrapATSWPBatch(payload, batchType))
+}
+
 func (s *Server) ModemStates() []ModemState {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
@@ -777,6 +791,41 @@ func (s *Server) GetCommandData(modemID string, clear bool) []BatchRecord {
 		return nil
 	}
 	return route.Command.Snapshot(clear)
+}
+
+// SetUseMonitor toggles monitor queue ownership mode for modemID.
+func (s *Server) SetUseMonitor(modemID string, use bool) bool {
+	s.mu.RLock()
+	route := s.routingByModem[modemID]
+	s.mu.RUnlock()
+	if route == nil {
+		return false
+	}
+	route.Monitor.SetInUse(use)
+	return true
+}
+
+// GetUseMonitor returns monitor queue ownership mode for modemID.
+func (s *Server) GetUseMonitor(modemID string) bool {
+	s.mu.RLock()
+	route := s.routingByModem[modemID]
+	s.mu.RUnlock()
+	if route == nil {
+		return false
+	}
+	return route.Monitor.InUse()
+}
+
+// GetMonitorData returns monitor queue records for modemID.
+// If clear is true, records are drained from the queue.
+func (s *Server) GetMonitorData(modemID string, clear bool) []BatchRecord {
+	s.mu.RLock()
+	route := s.routingByModem[modemID]
+	s.mu.RUnlock()
+	if route == nil {
+		return nil
+	}
+	return route.Monitor.Snapshot(clear)
 }
 
 func (s *Server) SetUseConfig(modemID string, use bool) bool {

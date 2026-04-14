@@ -29,6 +29,12 @@ func TestCompatOwnershipLock(t *testing.T) {
 	}
 
 	rec = httptest.NewRecorder()
+	mux.ServeHTTP(rec, authReq(t, http.MethodGet, "/v1/compat/getdataset?machineName=host-a", "token123", nil))
+	if rec.Code != http.StatusConflict {
+		t.Fatalf("case-mismatch getdataset expected 409, got %d body=%s", rec.Code, rec.Body.String())
+	}
+
+	rec = httptest.NewRecorder()
 	mux.ServeHTTP(rec, authReq(t, http.MethodPost, "/v1/compat/disconnect", "token123", map[string]any{
 		"machineName": "HOST-B",
 	}))
@@ -44,4 +50,3 @@ func TestCompatOwnershipLock(t *testing.T) {
 		t.Fatalf("owner disconnect expected 200, got %d body=%s", rec.Code, rec.Body.String())
 	}
 }
-

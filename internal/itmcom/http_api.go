@@ -151,6 +151,77 @@ func (s *Server) newHTTPMux(limiter *rateLimiter) *http.ServeMux {
 		writeJSON(w, s.DataSetView())
 	}))
 
+	mux.HandleFunc("/v1/compat/getusemonitor", s.withSecurity(limiter, true, func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			http.Error(w, errMethodNotAllowed, http.StatusMethodNotAllowed)
+			return
+		}
+		modemID := strings.TrimSpace(r.URL.Query().Get("modemId"))
+		if modemID == "" {
+			http.Error(w, "modemId is required", http.StatusBadRequest)
+			return
+		}
+		if !s.IsClientAllowed(r.URL.Query().Get("machineName")) {
+			http.Error(w, errCompatClientLock, http.StatusConflict)
+			return
+		}
+		writeJSON(w, map[string]any{"modemID": modemID, "inUse": s.GetUseMonitor(modemID)})
+	}))
+
+	mux.HandleFunc("/v1/compat/setusemonitor", s.withSecurity(limiter, true, func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			http.Error(w, errMethodNotAllowed, http.StatusMethodNotAllowed)
+			return
+		}
+		body, err := io.ReadAll(r.Body)
+		if err != nil {
+			http.Error(w, "invalid body", http.StatusBadRequest)
+			return
+		}
+		var req struct {
+			ModemID     string `json:"modemID"`
+			InUse       bool   `json:"inUse"`
+			MachineName string `json:"machineName"`
+		}
+		if err := json.Unmarshal(body, &req); err != nil {
+			http.Error(w, "invalid json", http.StatusBadRequest)
+			return
+		}
+		if !s.IsClientAllowed(req.MachineName) {
+			http.Error(w, errCompatClientLock, http.StatusConflict)
+			return
+		}
+		if !s.SetUseMonitor(strings.TrimSpace(req.ModemID), req.InUse) {
+			http.Error(w, "modem not found", http.StatusNotFound)
+			return
+		}
+		writeJSON(w, map[string]any{"ok": true})
+	}))
+
+	mux.HandleFunc("/v1/compat/getmonitordata", s.withSecurity(limiter, true, func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			http.Error(w, errMethodNotAllowed, http.StatusMethodNotAllowed)
+			return
+		}
+		modemID := strings.TrimSpace(r.URL.Query().Get("modemId"))
+		if modemID == "" {
+			http.Error(w, "modemId is required", http.StatusBadRequest)
+			return
+		}
+		if !s.IsClientAllowed(r.URL.Query().Get("machineName")) {
+			http.Error(w, errCompatClientLock, http.StatusConflict)
+			return
+		}
+		clear := true
+		if v := r.URL.Query().Get("clear"); v != "" {
+			if b, err := strconv.ParseBool(v); err == nil {
+				clear = b
+			}
+		}
+		records := s.GetMonitorData(modemID, clear)
+		writeJSON(w, map[string]any{"modemID": modemID, "count": len(records), "records": records})
+	}))
+
 	mux.HandleFunc("/v1/compat/getusecommand", s.withSecurity(limiter, true, func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			http.Error(w, errMethodNotAllowed, http.StatusMethodNotAllowed)
@@ -376,7 +447,10 @@ func (s *Server) newHTTPMux(limiter *rateLimiter) *http.ServeMux {
 		}
 		var req struct {
 			ModemID     string `json:"modemID"`
+			Identifier  string `json:"identifier"`
 			Hex         string `json:"hex"`
+			Begin       *int   `json:"begin"`
+			Size        *int   `json:"size"`
 			WrapATSWP   *bool  `json:"wrapATSWP"`
 			BatchType   *int   `json:"batchType"`
 			MachineName string `json:"machineName"`
@@ -389,13 +463,26 @@ func (s *Server) newHTTPMux(limiter *rateLimiter) *http.ServeMux {
 			http.Error(w, errCompatClientLock, http.StatusConflict)
 			return
 		}
-		payload, wrap, bt, err := parseHexPayload(body)
+		payload, _, bt, err := parseHexPayload(body)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-		if req.WrapATSWP != nil {
-			wrap = *req.WrapATSWP
+		if req.Begin != nil || req.Size != nil {
+			begin := 0
+			size := len(payload)
+			if req.Begin != nil {
+				begin = *req.Begin
+			}
+			if req.Size != nil {
+				size = *req.Size
+			}
+			end := begin + size
+			if begin < 0 || size < 0 || begin > len(payload) || end > len(payload) {
+				http.Error(w, "invalid begin/size", http.StatusBadRequest)
+				return
+			}
+			payload = payload[begin:end]
 		}
 		if req.BatchType != nil {
 			if *req.BatchType < 0 || *req.BatchType > 255 {
@@ -404,7 +491,15 @@ func (s *Server) newHTTPMux(limiter *rateLimiter) *http.ServeMux {
 			}
 			bt = byte(*req.BatchType)
 		}
-		if err := s.SendToModem(strings.TrimSpace(req.ModemID), payload, wrap, bt); err != nil {
+		modemID := strings.TrimSpace(req.ModemID)
+		if modemID == "" {
+			modemID = strings.TrimSpace(req.Identifier)
+		}
+		if modemID == "" {
+			http.Error(w, "modemID or identifier is required", http.StatusBadRequest)
+			return
+		}
+		if err := s.SendCompatCommand(modemID, payload, bt); err != nil {
 			http.Error(w, err.Error(), http.StatusConflict)
 			return
 		}
@@ -871,14 +966,14 @@ func clientIP(r *http.Request) string {
 }
 
 type rateLimiter struct {
-	mu sync.Mutex
+	mu           sync.Mutex
 	maxPerMinute int
-	buckets map[string]*rateBucket
+	buckets      map[string]*rateBucket
 }
 
 type rateBucket struct {
 	windowStart time.Time
-	count int
+	count       int
 }
 
 func newRateLimiter(maxPerMinute int) *rateLimiter {
@@ -887,7 +982,7 @@ func newRateLimiter(maxPerMinute int) *rateLimiter {
 	}
 	return &rateLimiter{
 		maxPerMinute: maxPerMinute,
-		buckets: make(map[string]*rateBucket),
+		buckets:      make(map[string]*rateBucket),
 	}
 }
 
@@ -973,4 +1068,3 @@ func netJoinHostPort(host string, port int) string {
 	}
 	return host + ":" + strconv.Itoa(port)
 }
-
