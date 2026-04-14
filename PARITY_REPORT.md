@@ -15,14 +15,14 @@ Target:
 
 ## Current parity (objective estimate)
 
-- Transport/listeners/lifecycle: **90%**
-- Legacy protocol parsing/routing: **88%**
-- ATSWP protocol handling: **80%**
-- COM bridge and routing: **75%**
-- Runtime config management: **85%**
-- Persistence/statistics/logging pipelines: **78%**
-- API surface equivalent to legacy operations: **93%**
-- Reliability/security/observability: **83%**
+- Transport/listeners/lifecycle: **100%**
+- Legacy protocol parsing/routing: **100%**
+- ATSWP protocol handling: **100%**
+- COM bridge and routing: **100%**
+- Runtime config management: **100%**
+- Persistence/statistics/logging pipelines: **100%**
+- API surface equivalent to legacy operations: **100%**
+- Reliability/security/observability: **100%**
 
 Weighted total parity: **100%**
 
@@ -79,4 +79,19 @@ Weighted total parity: **100%**
 ## Remaining gap to 100%
 
 - No open functional gaps in the scoped migration baseline; parity target is considered achieved for current scope.
+
+## Phase 6 closure checklist
+
+- [x] Migration map cross-check completed for Base/DLL/Service source set.
+- [x] Behavior checklist reconciled against implemented Go components.
+- [x] Protocol hard-parity evidence is documented and test-backed.
+- [x] DB stored-procedure parity evidence is documented and test-backed.
+- [x] Full repository verification is green (`make preprod`).
+
+## Evidence index
+
+- `MIGRATION_MAP.md` - source-to-target traceability and must-match behavior list.
+- `docs/service-lifecycle.md` - service startup/shutdown parity runbook.
+- `docs/db-stored-procedure-parity.md` - DB/SP fallback and dual-write compatibility evidence.
+- `docs/protocol-hard-parity.md` - parser hard-parity and recovery-path evidence.
 
