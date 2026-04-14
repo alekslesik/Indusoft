@@ -123,17 +123,10 @@ INSERT INTO Modem (ModemID, SiteID, mbConnect, ConnectionTime, Flag)
 VALUES (@p1, @p2, 0, GETDATE(), 0)`, r.ModemID, r.SiteID)
 		}
 		for _, p := range data.COMPorts {
-			parityInt := 0
-			switch p.Parity {
-			case "1", "odd", "Odd":
-				parityInt = 1
-			case "2", "even", "Even":
-				parityInt = 2
-			}
 			_, _ = tx.ExecContext(ctx, `
 INSERT INTO Port (PortName, BaudRate, Parity, DataBits, StopBits)
 VALUES (@p1, @p2, @p3, @p4, @p5)`,
-				p.PortName, p.BaudRate, parityInt, p.DataBits, p.StopBits)
+				p.PortName, p.BaudRate, legacyParityInt(p.Parity), p.DataBits, p.StopBits)
 		}
 		for _, r := range data.COMRoutes {
 			_, _ = tx.ExecContext(ctx, `
@@ -200,6 +193,17 @@ func legacyFrameLogPayload(frame BatchRecord) (string, int) {
 		frame.BatchHex,
 	)
 	return msg, legacyLogStatusInfo
+}
+
+func legacyParityInt(parity string) int {
+	switch strings.ToLower(strings.TrimSpace(parity)) {
+	case "1", "odd":
+		return 1
+	case "2", "even":
+		return 2
+	default:
+		return 0
+	}
 }
 
 func (s *mssqlStore) loadListeners(ctx context.Context, rd *RuntimeData) error {
@@ -322,16 +326,23 @@ func (s *mssqlStore) loadCOMRoutes(ctx context.Context, rd *RuntimeData) error {
 }
 
 func (s *mssqlStore) queryRuntimeRows(ctx context.Context, modernSQL, legacySQL, legacyProc string) (*sql.Rows, error) {
-	rows, err := s.db.QueryContext(ctx, modernSQL)
-	if err == nil {
-		return rows, nil
-	}
-	if s.useStoredProcedures {
-		if rows, procErr := s.db.QueryContext(ctx, legacyProc); procErr == nil {
+	queries := runtimeQueryPlan(s.useStoredProcedures, modernSQL, legacySQL, legacyProc)
+	var lastErr error
+	for _, q := range queries {
+		rows, err := s.db.QueryContext(ctx, q)
+		if err == nil {
 			return rows, nil
 		}
+		lastErr = err
 	}
-	return s.db.QueryContext(ctx, legacySQL)
+	return nil, lastErr
+}
+
+func runtimeQueryPlan(useStoredProcedures bool, modernSQL, legacySQL, legacyProc string) []string {
+	if useStoredProcedures {
+		return []string{legacyProc, modernSQL, legacySQL}
+	}
+	return []string{modernSQL, legacySQL}
 }
 
 func scanRowMap(rows *sql.Rows) (map[string]any, error) {
