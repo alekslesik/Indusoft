@@ -27,13 +27,13 @@ type BatchRecord struct {
 }
 
 type Routing struct {
-	SiteID   int
-	ModemID  string
+	SiteID    int
+	ModemID   string
 	MbConnect bool
 
-	Monitor *MonitorQueue
-	Command *MonitorQueue
-	Config  *MonitorQueue
+	Monitor   *MonitorQueue
+	Command   *MonitorQueue
+	Config    *MonitorQueue
 	CommState *MonitorQueue
 }
 
@@ -51,7 +51,6 @@ type ModemConn struct {
 
 	// ATSWP parsing state.
 	atswpRemainATSWP []byte
-	atswpRemainSize  int
 
 	// Stats.
 	inTraffic  int64
@@ -61,26 +60,25 @@ type ModemConn struct {
 }
 
 type ModemState struct {
-	ModemID    string `json:"modemID"`
-	ModemType  string `json:"modemType"`
-	Connected  bool   `json:"connected"`
-	SiteID     int    `json:"siteID"`
-	InTraffic  int64  `json:"inTraffic"`
-	OutTraffic int64  `json:"outTraffic"`
-	QueueDepth int    `json:"queueDepth"`
-	CommandQueueDepth int `json:"commandQueueDepth"`
-	ConfigQueueDepth int `json:"configQueueDepth"`
-	CommStateQueueDepth int `json:"commStateQueueDepth"`
+	ModemID             string `json:"modemID"`
+	ModemType           string `json:"modemType"`
+	Connected           bool   `json:"connected"`
+	SiteID              int    `json:"siteID"`
+	InTraffic           int64  `json:"inTraffic"`
+	OutTraffic          int64  `json:"outTraffic"`
+	QueueDepth          int    `json:"queueDepth"`
+	CommandQueueDepth   int    `json:"commandQueueDepth"`
+	ConfigQueueDepth    int    `json:"configQueueDepth"`
+	CommStateQueueDepth int    `json:"commStateQueueDepth"`
 }
 
 type ServerMetrics struct {
-	UptimeSeconds    int64 `json:"uptimeSeconds"`
-	ActiveConnections int  `json:"activeConnections"`
-	KnownModems       int  `json:"knownModems"`
-	ReadErrors       int64 `json:"readErrors"`
-	WriteErrors      int64 `json:"writeErrors"`
-	ParseErrors      int64 `json:"parseErrors"`
-	DroppedFrames    int64 `json:"droppedFrames"`
-	COM              COMMetrics `json:"com"`
+	UptimeSeconds     int64      `json:"uptimeSeconds"`
+	ActiveConnections int        `json:"activeConnections"`
+	KnownModems       int        `json:"knownModems"`
+	ReadErrors        int64      `json:"readErrors"`
+	WriteErrors       int64      `json:"writeErrors"`
+	ParseErrors       int64      `json:"parseErrors"`
+	DroppedFrames     int64      `json:"droppedFrames"`
+	COM               COMMetrics `json:"com"`
 }
-

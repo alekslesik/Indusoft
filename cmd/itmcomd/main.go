@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"flag"
 	"fmt"
 	"log"
@@ -114,9 +113,3 @@ func main() {
 	log.Printf("bye")
 	fmt.Println()
 }
-
-func prettyPrint(v any) {
-	b, _ := json.MarshalIndent(v, "", "  ")
-	fmt.Println(string(b))
-}
-
