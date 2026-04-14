@@ -80,7 +80,7 @@ func parseATSWPFramesDetailed(
 				}
 			}
 			if !foundEnd {
-				stats.Malformed++
+				// Incomplete chunk; keep remain for next read window.
 				break
 			}
 
@@ -95,7 +95,13 @@ func parseATSWPFramesDetailed(
 			restored = append(restored, byteList...)
 
 			// Clear byte stuffing (195 escape).
-			unstuffed := clearByteStaffing(restored)
+			unstuffed, okUnstuff := clearByteStaffingDetailed(restored)
+			if !okUnstuff {
+				stats.Malformed++
+				index1 += num2
+				batchsAtswp = len(receive) - index1
+				continue
+			}
 			if len(unstuffed) < 4 || unstuffed[0] != 192 || unstuffed[len(unstuffed)-1] != 193 {
 				stats.Malformed++
 				index1 += num2
@@ -183,8 +189,13 @@ func parseATSWPFramesDetailed(
 
 // clearByteStaffing matches ITMCOMDLL.ClearByteStaffing.
 func clearByteStaffing(oldBatch []byte) []byte {
+	out, _ := clearByteStaffingDetailed(oldBatch)
+	return out
+}
+
+func clearByteStaffingDetailed(oldBatch []byte) ([]byte, bool) {
 	if len(oldBatch) == 0 {
-		return nil
+		return nil, true
 	}
 	out := make([]byte, 0, len(oldBatch))
 	for i := 0; i < len(oldBatch); i++ {
@@ -192,7 +203,7 @@ func clearByteStaffing(oldBatch []byte) []byte {
 		if num1 == byte(195) {
 			i++
 			if i >= len(oldBatch) {
-				break
+				return out, false
 			}
 			num2 := oldBatch[i]
 			out = append(out, byte(uint8(num2)&223))
@@ -200,7 +211,7 @@ func clearByteStaffing(oldBatch []byte) []byte {
 		}
 		out = append(out, num1)
 	}
-	return out
+	return out, true
 }
 
 // parseLegacyToBatches wraps parseLegacyFrames and adapts callback style.
