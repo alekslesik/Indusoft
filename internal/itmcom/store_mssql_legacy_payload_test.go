@@ -39,3 +39,24 @@ func TestLegacyFrameLogPayload(t *testing.T) {
 	}
 }
 
+func TestLegacyParityInt(t *testing.T) {
+	cases := []struct {
+		in   string
+		want int
+	}{
+		{in: "odd", want: 1},
+		{in: "Odd", want: 1},
+		{in: "1", want: 1},
+		{in: "even", want: 2},
+		{in: "Even", want: 2},
+		{in: "2", want: 2},
+		{in: "none", want: 0},
+		{in: "", want: 0},
+	}
+	for _, tc := range cases {
+		if got := legacyParityInt(tc.in); got != tc.want {
+			t.Fatalf("legacyParityInt(%q) mismatch: got=%d want=%d", tc.in, got, tc.want)
+		}
+	}
+}
+
